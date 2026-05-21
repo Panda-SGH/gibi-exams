@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gibi Exams is a Telegram-first exam sharing platform for Ethiopian university students. The system allows students to upload, organize, discover, preview, and download past exam papers through a Telegram bot and a connected Telegram Mini App. Students send exam files to the bot or upload through mini app, complete structured metadata inside the mini app, and publish exams into a searchable public library. Other students can browse exams; search by title; filter by university, department, course, year, semester, exam type; preview files before downloading; and retrieve files either directly to their phone or through dedicated Telegram bot chat interface. The MVP focuses on making exam access fast, reliable, mobile-friendly, and simple under real Ethiopian network conditions.
+Gibi Exams is a Telegram-first exam sharing platform for Ethiopian university students. The system allows students to upload, organize, discover, preview, and download past exam papers through a Telegram bot and a connected Telegram Mini App. Students send exam files to the bot or upload through mini app, complete structured metadata inside the mini app, and publish exams into a searchable public library. Other students can browse exams; search by title/course; filter by university, department, year, semester, exam type; preview files before downloading; and retrieve files either directly to their phone or through dedicated Telegram bot chat interface. The MVP focuses on making exam access fast, reliable, mobile-friendly, and simple under real Ethiopian network conditions.
 
 ## Goals
 
@@ -39,7 +39,6 @@ Maintain a clean architecture that supports future iteration without major rewri
    - course name
    - semester/year
    - exam type
-   - optional notes
 7. System validates metadata and file association.
 8. User publishes the exam.
 9. System stores metadata in Supabase and links it to the uploaded file.
@@ -114,10 +113,9 @@ Optimized mobile browsing experience
 
 ### Search & Filtering
 
-Search by exam title
+Search by exam title/course name
 University filters
 Department filters
-course filters
 Semester/year filters
 Exam type filters
 

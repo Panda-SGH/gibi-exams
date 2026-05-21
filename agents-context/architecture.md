@@ -6,11 +6,11 @@ Gibi Exams is a Telegram-first exam discovery and sharing platform for Ethiopian
 
 The architecture is designed around:
 
-* mobile-first usage
-* clear ownership boundaries
-* server-controlled security
-* scalable file delivery
-* simple and maintainable feature isolation
+- mobile-first usage
+- clear ownership boundaries
+- server-controlled security
+- scalable file delivery
+- simple and maintainable feature isolation
 
 ---
 
@@ -84,100 +84,104 @@ Supabase
 
 ## Folder Ownership Rules
 
-| Folder                    | Responsibility                                                             |
-| ------------------------- | -------------------------------------------------------------------------- |
-| `app/`                | Application routes, pages, API route handlers, server actions entry points |
-| `app/api/tg-webhook/` | Telegram webhook ingestion only                                            |
-| `app/api/auth/`       | Telegram initData verification and session creation                        |
-| `app/upload/`         | Upload metadata flow                                                       |
-| `app/me/`             | User dashboard and upload management                                       |
-| `app/admin/`          | Admin-only moderation and management tools                                 |
-| `components/`         | Reusable presentational UI components only                                 |
-| `components/ui/`      | Shared shadcn/ui primitives                                                |
-| `context/`            | React context providers and shared UI state                                |
-| `hooks/`              | Reusable React hooks                                                       |
-| `lib/actions.ts`      | Server-side mutations only                                                 |
-| `lib/data.ts`         | Centralized database querying and read access                              |
-| `lib/utils.ts`        | Shared utility functions                                                   |
-| `lib/bot/`            | All Telegram bot-specific logic                                            |
-| `lib/bot/handlers/`   | Individual Telegram update handlers                                        |
-| `lib/supabase/`       | Supabase client wrappers and configuration                                 |
-| `supabase/`               | Migrations, schema, RLS policies, local Supabase config                    |
+| Folder                             | Responsibility                                                             |
+| ---------------------------------- | -------------------------------------------------------------------------- |
+| `app/`                             | Application routes, pages, API route handlers, server actions entry points |
+| `app/api/webhook/[webhook-secret]` | Telegram webhook ingestion only                                            |
+| `app/api/auth/`                    | Telegram initData verification and session creation                        |
+| `app/upload/`                      | Upload metadata flow                                                       |
+| `app/me/`                          | User dashboard and upload management                                       |
+| `app/admin/`                       | Admin-only moderation and management tools                                 |
+| `components/`                      | Reusable presentational UI components only                                 |
+| `components/ui/`                   | Shared shadcn/ui primitives                                                |
+| `context/`                         | React context providers and shared UI state                                |
+| `hooks/`                           | Reusable React hooks                                                       |
+| `lib/actions.ts`                   | Server-side mutations only                                                 |
+| `lib/data.ts`                      | Centralized database querying and read access                              |
+| `lib/utils.ts`                     | Shared utility functions                                                   |
+| `lib/bot/`                         | All Telegram bot-specific logic                                            |
+| `lib/bot/handlers/`                | Individual Telegram update handlers                                        |
+| `lib/supabase/`                    | Supabase client wrappers and configuration                                 |
+| `supabase/`                        | Migrations, schema, RLS policies, local Supabase config                    |
 
 ---
 
-# Storage Model
+## Storage & Delivery Responsibilities
 
-## Database vs File Storage vs Cache
+### Database vs File Storage vs Cache
 
-| Storage Type        | Purpose                    | Examples                                |
-| ------------------- | -------------------------- | --------------------------------------- |
-| PostgreSQL Database | Structured relational data | users, exams, metadata, upload sessions |
-| Object/File Storage | Large binary file storage  | PDFs, JPGs, PNGs                        |
-| CDN Layer           | Fast public delivery       | Downloaded exam files                   |
-| In-memory/UI Cache  | Temporary frontend state   | filter state, pagination state          |
+| Layer                | Purpose                              | Examples                                         |
+| -------------------- | ------------------------------------ | ------------------------------------------------ |
+| PostgreSQL Database  | Structured relational data           | users, exams, uploads, universities, departments |
+| Object Storage       | Binary file persistence              | PDFs, JPGs, PNGs                                 |
+| CDN / Delivery Layer | Accelerated signed file delivery     | Exam previews and downloads                      |
+| In-memory/UI Cache   | Temporary frontend interaction state | filters, pagination                              |
 
 ---
 
-## Database Responsibilities
+### Database Responsibilities
 
 The PostgreSQL database stores:
 
-* users
-* exams
-* upload sessions
-* metadata
-* moderation states
-* publish states
-* ownership relationships
-* audit timestamps
+- users
+- exams
+- uploads
+- universities
+- departments
+- moderation states
+- publish states
+- ownership relationships
+- audit timestamps
 
-### Example Tables
+#### Example Tables
 
-| Table          | Purpose                               |
-| -------------- | ------------------------------------- |
-| `users`        | Telegram-linked users                 |
-| `exams`        | Published exam metadata               |
-| `uploads`      | Temporary upload tracking             |
-| `universities` | Filterable normalized university data |
-| `departments`  | Department taxonomy                   |
-| `courses`      | Course metadata                       |
+| Table        | Purpose                    |
+| ------------ | -------------------------- |
+| users        | Telegram-linked users      |
+| exams        | Published exam metadata    |
+| uploads      | Upload lifecycle tracking  |
+| universities | Normalized university data |
+| departments  | Department taxonomy        |
 
 ---
 
-## File Storage Responsibilities
+### File Storage Responsibilities
 
 Object storage stores:
 
-* PDF files
-* JPG files
-* PNG files
-* generated preview assets (future-safe)
-* temporary upload files
+- PDF files
+- JPG files
+- PNG files
+- temporary upload files
+- future preview assets
 
-Files are never stored directly in the database.
+Files are never stored directly inside the database.
+
+Storage objects are accessed through backend-controlled signed URLs.
+
+Files may exist in temporary upload state before becoming publicly discoverable exams.
+
+Large files must never pass through the Next.js server unnecessarily.
 
 ---
 
-## Cache Responsibilities
+### Cache Responsibilities
 
 The system intentionally minimizes caching complexity during MVP.
 
 Cache may include:
 
-* frontend filter state
-* pagination state
-* lightweight query caching
-* CDN edge caching for file delivery
+- frontend filter state
+- pagination state
+- lightweight query caching
+- CDN edge caching
 
-The system does **not** implement:
+The system does not implement:
 
-* offline sync
-* distributed cache infrastructure
-* AI embedding cache
-* semantic indexing cache
-
----
+- offline synchronization
+- distributed cache infrastructure
+- AI embedding cache
+- semantic indexing cache
 
 # Authentication & Access Model
 
@@ -212,10 +216,10 @@ Traditional email/password authentication does not exist.
 
 Authorization is enforced using:
 
-* server-side validation
-* Supabase Row Level Security
-* ownership checks
-* admin role checks
+- server-side validation
+- Supabase Row Level Security
+- ownership checks
+- admin role checks
 
 ---
 
@@ -236,26 +240,26 @@ Authorization is enforced using:
 
 Public users may:
 
-* browse exams
-* search exams
-* preview exams
-* download published exams
+- browse exams
+- search exams
+- preview exams
+- download published exams
 
 ### Authenticated User Access
 
 Authenticated users may additionally:
 
-* upload exams
-* publish metadata
-* manage their uploads
+- upload exams
+- publish metadata
+- manage their uploads
 
 ### Admin Access
 
 Admins may additionally:
 
-* moderate uploads
-* remove content
-* manage visibility states
+- moderate uploads
+- remove content
+- manage visibility states
 
 ---
 
@@ -266,16 +270,50 @@ Admins may additionally:
 ```text
 Telegram Upload
     ↓
-Temporary Upload Session
+Temporary Upload Session Created
+    ↓
+Telegram file_id Stored
     ↓
 Mini App Metadata Completion
     ↓
+Publish Action
+    ↓
+Server Downloads File From Telegram
+    ↓
 Validation
     ↓
-Publish Action
+Upload To Object Storage
     ↓
 Public Exam Availability
 ```
+
+---
+
+## Upload Session Model
+
+Temporary upload sessions represent files received by the bot
+before publication.
+
+An upload session:
+
+- belongs to a single user
+- stores Telegram file metadata and telegram_file_id
+- remains private until published
+- does not yet create a public exam
+- may be abandoned safely without consuming permanent storage
+- may expire after a retention period
+
+---
+
+## Upload Session States
+
+| State     | Meaning                      |
+| --------- | ---------------------------- |
+| pending   | file received from Telegram  |
+| draft     | metadata editing in progress |
+| published | exam successfully published  |
+| rejected  | validation failed            |
+| deleted   | upload removed from system   |
 
 ---
 
@@ -287,7 +325,60 @@ Public Exam Availability
 | JPG       | Yes       |
 | PNG       | Yes       |
 
-Unsupported formats are rejected during upload validation.
+Unsupported formats are rejected during validation.
+
+---
+
+## Validation Responsibilities
+
+Validation includes:
+
+- supported MIME type verification
+- file size limits
+- required metadata validation
+- upload ownership verification
+- Telegram file accessibility verification
+- duplicate detection
+- successful storage upload verification
+
+---
+
+## File Storage Policy
+
+Before publication:
+
+- files remain temporarily managed by Telegram
+- the system stores telegram_file_id references only
+
+After publication:
+
+- files are downloaded from Telegram
+- files are uploaded into platform-controlled object storage
+- published exams are served from CDN/object storage
+
+Files are stored in their original uploaded format.
+
+| Upload Type | Stored As |
+| ----------- | --------- |
+| PDF         | PDF       |
+| JPG         | JPG       |
+| PNG         | PNG       |
+
+Files are not converted between formats during MVP.
+
+---
+
+## Preview Policy
+
+Previews are rendered directly from original uploaded files.
+
+| File Type | Preview Method        |
+| --------- | --------------------- |
+| PDF       | native/browser viewer |
+| JPG/PNG   | image renderer        |
+
+No OCR, thumbnail generation, preprocessing pipelines,
+or image transformations exist in MVP.
 
 ---
 
@@ -297,12 +388,37 @@ The MVP intentionally avoids heavy background infrastructure.
 
 ## Current Async Responsibilities
 
-| Task                 | Execution Model                      |
-| -------------------- | ------------------------------------ |
-| File upload handling | Telegram webhook + server processing |
-| Metadata persistence | Server actions                       |
-| File delivery        | CDN/object storage                   |
-| Duplicate detection  | Synchronous publish-time validation  |
+| Task                     | Execution Model                      |
+| ------------------------ | ------------------------------------ |
+| Telegram file intake     | Telegram webhook + server processing |
+| Metadata persistence     | Server actions                       |
+| Publish-time file import | synchronous server processing        |
+| File delivery            | CDN/object storage                   |
+| Duplicate detection      | synchronous publish-time validation  |
+
+---
+
+## Duplicate Detection
+
+Duplicate detection happens during publish action.
+
+MVP duplicate detection uses:
+
+- file hash comparison
+- lightweight metadata similarity checks
+
+The goal is to prevent obvious duplicate uploads
+without introducing expensive processing systems.
+
+---
+
+## Cleanup Policy
+
+Unpublished upload sessions may be automatically removed
+after a retention period.
+
+Published exams are considered permanent unless deleted
+by admins or upload owners.
 
 ---
 
@@ -310,16 +426,15 @@ The MVP intentionally avoids heavy background infrastructure.
 
 The following systems are intentionally excluded from MVP:
 
-* OCR pipelines
-* AI embeddings
-* semantic search indexing
-* queue workers
-* event streaming systems
-* distributed job processors
-
----
-
-# Data Flow Model
+- OCR pipelines
+- AI embeddings
+- semantic search indexing
+- queue workers
+- event streaming systems
+- distributed job processors
+- automatic thumbnail generation
+- file format conversion pipelines
+- image preprocessing systems# Data Flow Model
 
 ## Upload Flow
 
