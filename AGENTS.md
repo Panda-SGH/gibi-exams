@@ -10,20 +10,20 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Read the following files in order before implementing
 or making any architectural decision:
 
-1. `agents-context/project-overview.md` — product definition,
+1. `docs/project-overview.md` — product definition,
    goals, features, and scope
-2. `agents-context/architecture.md` — system structure,
+2. `docs/architecture.md` — system structure,
    boundaries, storage model, and invariants
 3. `DESIGN.md` — theme, colors, typography,
    and component conventions
-4. `agents-context/code-standards.md` — implementation rules
+4. `docs/code-standards.md` — implementation rules
    and conventions
-5. `agents-context/ai-workflow-rules.md` — development workflow,
+5. `docs/ai-workflow-rules.md` — development workflow,
    scoping rules, and delivery approach
-6. `agents-context/progress-tracker.md` — current phase,
+6. `docs/progress-tracker.md` — current phase,
    completed work, open questions, and next steps
 
-Update `agents-context/progress-tracker.md` after each
+Update `docs/progress-tracker.md` after each
 meaningful implementation change.
 
 If implementation changes the architecture, scope, or
