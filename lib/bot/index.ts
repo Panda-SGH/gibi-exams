@@ -1,4 +1,4 @@
-// lib/bot.ts
+import { startHandler } from "./handlers/start";
 import { Bot } from "grammy";
 
 if (!process.env.TELEGRAM_BOT_TOKEN) {
@@ -7,6 +7,5 @@ if (!process.env.TELEGRAM_BOT_TOKEN) {
 
 export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
-// Add your bot logic here
-bot.command("start", (ctx) => ctx.reply("Welcome to your Next.js Bot!"));
-bot.on("message", (ctx) => ctx.reply(`You said: ${ctx.message.text}`));
+// Register command handlers
+bot.command("start", startHandler);

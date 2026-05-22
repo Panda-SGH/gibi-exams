@@ -4,15 +4,15 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- [phase name]
+- Unit 01: Project Foundation & Deployment Skeleton
 
 ## Current Goal
 
-- [what you are building right now]
+- Establish a clean, buildable, deployment-ready Next.js project with design system tokens, Supabase client wrappers, and Telegram bot.
 
 ## Completed
 
-- None yet.
+- Unit 01: Project Foundation & Deployment Skeleton
 
 ## In Progress
 
@@ -20,7 +20,7 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- [first unit to build]
+- Unit 02: Database Schema & Type Generation
 
 ## Open Questions
 
